@@ -1,32 +1,70 @@
 export const commonStyles = {
-  button: {
-    backgroundColor: "#2069e0",
-    borderRadius: 15,
-    width: "50%",
+  container: {
+    flex: 1,
     alignItems: "center",
+  },
+  containerInput: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "90%",
+    margin: 5,
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  button33: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "33%",
+    padding: 4,
+    margin: 3,
+    marginTop: 5,
+    marginBottom: 1,
+  },
+  button50: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "50%",
+    padding: 4,
+    margin: 3,
+    marginTop: 5,
+    marginBottom: 1,
+  },
+  button100: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    padding: 4,
+    margin: 3,
+    marginTop: 5,
+    marginBottom: 1,
   },
   buttonText: {
     fontWeight: "400",
     fontSize: 20,
-    margin: 10,
-    color: "white",
+    padding: 10,
+    color: "yellow",
   },
   title: {
     fontWeight: "bold",
     fontSize: 30,
+    padding: 20,
     textAlign: "center",
+  },
+  text: {
+    fontSize: 16,
   },
   content: {
     fontWeight: "400",
     fontSize: 24,
   },
-};
-
-export const commonStyles2 = {
-  title: {
-    fontWeight: "bold",
-    fontSize: 40,
-    margin: 20,
+  backgroundGradient: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 400,
   },
   switchText: {
     fontWeight: "400",
@@ -34,110 +72,46 @@ export const commonStyles2 = {
     marginTop: 20,
   },
   inputView: {
-    backgroundColor: "#EEEEEE",
-    width: "70%",
-    height: 45,
+    width: "100%",
     marginBottom: 20,
+    borderRadius: 0,
     alignItems: "center",
   },
   textInput: {
-    height: 50,
-    flex: 1,
-    padding: 10,
-  },
-  button: {
-    backgroundColor: "blue",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontWeight: "400",
+    width: "100%",
     fontSize: 20,
-    margin: 20,
-    color: "yellow",
+    textAlign: "center",
+    height: 30,
+    backgroundColor: "transparent",
   },
   errorText: {
     fontSize: 15,
     color: "red",
     marginTop: 20,
   },
-};
-
-export const lightStyles = {
-  container: {
-    flex: 1,
-    backgroundColor: "#E9B2E3",
-  },
-  container2: {
-    flex: 1,
-    backgroundColor: "#ffa",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 30,
-    textAlign: "center",
-    color: "black",
-  },
-  boldText: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "black",
-  },
-  text: {
-    color: "black",
-  },
   header: {
-    backgroundColor: "#8BC7E9",
     height: 100,
-    shadowColor: "black",
     shadowOpacity: 0.2,
     shadowRadius: 5,
+    shadowColor: "black",
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#0108AE",
-  },
-  headerTint: "#f55",
-};
-
-export const darkStyles = {
-  container: {
-    flex: 1,
-    backgroundColor: "#333333",
-  },
-  container2: {
-    flex: 1,
-    backgroundColor: "#222222",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 30,
-    textAlign: "center",
-    color: "white",
   },
   boldText: {
     fontWeight: "bold",
-    fontSize: 16,
-    color: "white",
+    fontSize: 18,
   },
-  text: {
-    color: "white",
+  logo: {
+    width: 120,
+    height: 120,
+    borderBottomRightRadius: 40,
+    borderTopLeftRadius: 40,
   },
-  header: {
-    backgroundColor: "#222222",
+  logo100: {
+    width: 100,
     height: 100,
-    shadowColor: "black",
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
+    borderRadius: 50,
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#f4d47c",
-  },
-  headerTint: "#f4d47c",
 };

@@ -1,7 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet } from "react-native";
-import { Text, Image, View, TouchableOpacity } from "react-native";
+import { Image, View, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
 import {
@@ -13,22 +13,26 @@ import {
   API_CART,
 } from "../constants/API";
 import { useSelector } from "react-redux";
+import { Button, Text, TextInput, useTheme, Avatar } from "react-native-paper";
+import { commonStyles as styles } from "../styles/commonStyles";
 
 export default function IndexScreen({ navigation, route }) {
+  const { dark, colors } = useTheme();
+  const isDark = dark;
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const token = useSelector((state) => state.auth.token);
-  const isDark = useSelector((state) => state.pref.isDark);
 
   useEffect(() => {
     navigation.setOptions({
+      headerLeft: null,
       headerRight: () => (
         <TouchableOpacity onPress={addPost}>
           <FontAwesome
             name="plus-circle"
             size={24}
-            style={{ color: "#0108AE", marginRight: 15 }}
+            style={{ color: colors.primaryVariant, marginRight: 15 }}
           />
         </TouchableOpacity>
       ),
@@ -39,9 +43,7 @@ export default function IndexScreen({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    //console.log("Setting up nav listerner");
     const removeListerner = navigation.addListener("focus", () => {
-      //console.log("Running nav listerner");
       getPosts();
     });
     getPosts;
@@ -77,46 +79,100 @@ export default function IndexScreen({ navigation, route }) {
     setRefreshing(false);
   }
 
-  async function addCart(item) {}
+  async function addCart(item) {
+    try {
+      const response = await axios.get(API + API_RECIPE_ITEM, {
+        headers: { Authorization: `JWT ${token}` },
+      });
+      const recipeItemData = response.data;
+      for (let i = 0; i < recipeItemData.length; i++) {
+        if (recipeItemData[i].recipeId == item.id) {
+          const itemId = recipeItemData[i].itemId;
+          const quantity = recipeItemData[i].itemDetails.defaultQuantity;
+          const price = recipeItemData[i].itemDetails.price;
+          const response3 = await axios.post(
+            API + API_CREATE_CART,
+            {
+              itemId,
+              quantity,
+              price,
+            },
+            {
+              headers: { Authorization: `JWT ${token}` },
+            }
+          );
+          console.log(response3.data);
+        }
+      }
+    } catch (error) {
+      console.log(error.response.data);
+      if ((error.response.data.error = "Invalid token")) {
+        navigation.navigate("SignIn");
+      }
+    }
+  }
 
   function renderItem({ item }) {
     return (
       <TouchableOpacity
         style={{
-          padding: 20,
-          paddingBottom: 10,
-          width: "50%",
+          padding: 10,
+          paddingBottom: 0,
+          width: "33%",
         }}
         onLongPress={() =>
           navigation.navigate("RecipeEdit", {
-            id: item.id,
+            item,
           })
         }
         onPress={() => addCart(item)}
       >
-        <Text style={styles.text}>{item.name}</Text>
-        <Image
-          style={styles.logo}
-          source={{
-            uri: item.photoId,
+        {item.photoId == null || item.photoId == "" ? (
+          <Image
+            style={[styles.logo, { opacity: 0.5 }]}
+            source={{
+              uri: "https://static.wikia.nocookie.net/gensin-impact/images/6/6f/Item_Sashimi_Platter.png",
+            }}
+          />
+        ) : (
+          <Image
+            style={[styles.logo, { opacity: 0.5 }]}
+            source={{
+              uri: item.photoId,
+            }}
+          />
+        )}
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: "flex-start",
+            alignItems: "center",
           }}
-        />
+        >
+          <Text style={[styles.boldText, { color: colors.onSurface }]}>
+            {item.name}
+          </Text>
+          <Text>Future use</Text>
+        </View>
       </TouchableOpacity>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <LinearGradient
-        // Background Linear Gradient
-        colors={["#B2D5E9", "transparent"]}
-        style={styles.background}
+        colors={[colors.backgroundTop, "transparent"]}
+        style={styles.backgroundGradient}
       />
       <FlatList
         data={posts}
         renderItem={renderItem}
         style={[{ width: "100%" }]}
-        numColumns={2}
+        numColumns={3}
         keyExtractor={(item) => item.id.toString()}
         refreshControl={
           <RefreshControl
@@ -129,41 +185,3 @@ export default function IndexScreen({ navigation, route }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  background: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 400,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#E9B2E3",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container2: {
-    backgroundColor: "#E9B2E3",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 200,
-    height: 200,
-  },
-  boldText: {
-    fontWeight: "bold",
-    fontSize: 20,
-    color: "black",
-  },
-  text: {
-    color: "black",
-    fontSize: 20,
-  },
-  logo: {
-    width: 180,
-    height: 180,
-    borderBottomRightRadius: 50,
-    borderTopLeftRadius: 50,
-  },
-});

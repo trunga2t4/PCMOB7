@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ItemStack from "./ItemStack";
 import AccountStack from "./AccountStack";
@@ -11,6 +11,7 @@ const Tab = createBottomTabNavigator();
 
 export default function LoggedInStack() {
   const isDark = useSelector((state) => state.pref.isDark);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -33,7 +34,7 @@ export default function LoggedInStack() {
         activeTintColor: isDark ? "yellow" : "yellow",
         inactiveTintColor: "gray",
         style: {
-          backgroundColor: isDark ? "#222222" : "#7E4380",
+          backgroundColor: isDark ? "#2C1238" : "#7E4380",
         },
       }}
     >

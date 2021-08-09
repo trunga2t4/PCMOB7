@@ -1,13 +1,23 @@
-import { FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Appearance } from "react-native";
 import { TouchableOpacity, UIManager, LayoutAnimation } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 import { ActivityIndicator, Keyboard } from "react-native";
 import { API, API_LOGIN, API_SIGNUP } from "../constants/API";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { logInAction } from "../redux/ducks/blogAuth";
+import { setMode } from "../redux/ducks/accountPref.js";
+import { commonStyles as styles } from "../styles/commonStyles";
+import {
+  useTheme,
+  IconButton,
+  TextInput,
+  Button,
+  Title,
+} from "react-native-paper";
+
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -15,15 +25,15 @@ if (
   UIManager.setLayoutAnimationEnabledExperimental(true);
 } //Needs to be manually enabled for android
 
-export default function SignInSignUpScreen({ navigation }) {
+export default function SignInSignUpScreen({ navigation, props }) {
+  const dispatch = useDispatch();
+  const { dark, colors } = useTheme();
   const [username, setUsername] = useState("U1");
   const [password, setPassword] = useState("P");
   const [password2, setPassword2] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isLogIn, setIsLogIn] = useState(true);
   const [errorText, setErrorText] = useState("");
-  const dispatch = useDispatch();
-  const isDark = useSelector((state) => state.pref.isDark);
+  const isDark = dark;
 
   async function login() {
     console.log("---- Login time ----");
@@ -52,49 +62,59 @@ export default function SignInSignUpScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      ]}
+    >
       <LinearGradient
         // Background Linear Gradient
-        colors={["#B2D5E9", "transparent"]}
-        style={styles.background}
+        colors={[colors.backgroundTop, "transparent"]}
+        style={styles.backgroundGradient}
       />
-      <FontAwesome name="user" size={100} color="purple" />
-      <Text style={[styles.title, { margin: 20 }]}>Log In</Text>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Username:"
-          placeholderTextColor="#003f5c"
-          value={username}
-          onChangeText={(username) => setUsername(username)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Password:"
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(pw) => setPassword(pw)}
-        />
+      <View style={[{ alignItems: "center", width: "90%" }]}>
+        <FontAwesome name="user" size={100} color={colors.primary} />
+        <Title style={[styles.title]}>Log In</Title>
+        <View style={styles.inputView}>
+          <TextInput
+            mode="outlined"
+            style={[styles.textInput, { height: 60 }]}
+            placeholder="Username:"
+            value={username}
+            onChangeText={(username) => setUsername(username)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={[styles.textInput, { height: 60 }]}
+            mode="outlined"
+            placeholder="Password:"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={(pw) => setPassword(pw)}
+          />
+        </View>
+        <Button
+          style={[
+            styles.button,
+            { backgroundColor: colors.accent, width: "100%", padding: 10 },
+          ]}
+          icon="account"
+          mode="contained"
+          dark={isDark}
+          onPress={login}
+        >
+          Log In
+        </Button>
       </View>
 
-      <View />
       <View>
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={isLogIn ? login : signup}
-          >
-            <Text style={styles.buttonText}>Log In</Text>
-          </TouchableOpacity>
-          {loading ? (
-            <ActivityIndicator style={{ marginLeft: 10 }} />
-          ) : (
-            <View />
-          )}
-        </View>
+        {loading ? <ActivityIndicator style={{ marginLeft: 10 }} /> : <View />}
       </View>
       <TouchableOpacity
         onPress={() => {
@@ -103,7 +123,6 @@ export default function SignInSignUpScreen({ navigation }) {
             create: { type: "linear", property: "opacity" },
             update: { type: "spring", springDamping: 0.4 },
           });
-          setIsLogIn(!isLogIn);
           setErrorText("");
         }}
       ></TouchableOpacity>
@@ -111,56 +130,3 @@ export default function SignInSignUpScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  background: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 400,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#E9B2E3",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 40,
-    margin: 20,
-  },
-  switchText: {
-    fontWeight: "400",
-    fontSize: 20,
-    marginTop: 20,
-  },
-  inputView: {
-    backgroundColor: "#EEEEEE",
-    width: "70%",
-    height: 45,
-    marginBottom: 20,
-    alignItems: "center",
-  },
-  textInput: {
-    height: 50,
-    flex: 1,
-    padding: 10,
-  },
-  button: {
-    backgroundColor: "blue",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontWeight: "400",
-    fontSize: 20,
-    margin: 20,
-    color: "yellow",
-  },
-  errorText: {
-    fontSize: 15,
-    color: "red",
-    marginTop: 20,
-  },
-});

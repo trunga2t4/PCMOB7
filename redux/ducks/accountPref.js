@@ -2,11 +2,15 @@ export const CHANGE_MODE = "change_mode";
 export const DEFAULT_MODE = "default_mode";
 export const LIGHT_MODE = "light_mode";
 export const DARK_MODE = "dark_mode";
+export const SET_MODE = "set_mode";
 export const UPLOAD_PIC = "upload_pic";
 export const DELETE_PIC = "delete_pic";
 
 export function changeMode() {
   return { type: CHANGE_MODE };
+}
+export function setMode() {
+  return { type: SET_MODE };
 }
 export function defaultMode() {
   return { type: DEFAULT_MODE };
@@ -29,7 +33,7 @@ export function deletePic() {
 }
 
 const initialState = {
-  isDark: false,
+  isDark: true,
   profilePicture: null,
 };
 
@@ -37,6 +41,8 @@ export default function accountPrefReducer(state = initialState, action) {
   switch (action.type) {
     case CHANGE_MODE:
       return { ...state, isDark: !state.isDark };
+    case SET_MODE:
+      return { ...state, isDark: action.payload };
     case DEFAULT_MODE:
       return { ...state, isDark: null };
     case LIGHT_MODE:

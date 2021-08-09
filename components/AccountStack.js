@@ -2,34 +2,39 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import AccountScreen from "../screens/AccountScreen";
 import CameraScreen from "../screens/CameraScreen";
-import { lightStyles } from "../styles/commonStyles";
 
-const Stack = createStackNavigator();
+import { commonStyles } from "../styles/commonStyles";
+import { useTheme } from "react-native-paper";
+
+const InnerStack = createStackNavigator();
 
 export default function AccountStack() {
-  const styles = lightStyles;
+  const { colors } = useTheme();
+  const styles = { ...commonStyles };
+  const headerOptions = {
+    headerStyle: [styles.header, { backgroundColor: colors.backgroundHeader }],
+    headerTitleStyle: [styles.headerTitle, { color: colors.primaryVariant }],
+    headerTintColor: colors.primaryVariant,
+  };
 
   return (
-    <Stack.Navigator>
-      <Stack.Screen
+    <InnerStack.Navigator>
+      <InnerStack.Screen
         component={AccountScreen}
         name="Account"
         options={{
-          title: "Your Account",
-          headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
+          title: "My Account",
+          ...headerOptions,
         }}
       />
-      <Stack.Screen
+      <InnerStack.Screen
         component={CameraScreen}
         name="Camera"
         options={{
           title: "Take a photo",
-          headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
-          headerTintColor: styles.headerTint,
+          ...headerOptions,
         }}
       />
-    </Stack.Navigator>
+    </InnerStack.Navigator>
   );
 }
